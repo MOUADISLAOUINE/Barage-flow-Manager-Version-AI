@@ -1,0 +1,61 @@
+# ── Python ───────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+venv/
+.venv/
+env/
+*.egg
+
+# ── Environment files (NEVER commit these) ───────────────────────────
+.env
+*.env
+!.env.example
+!**/.env.example
+
+# ── Database ─────────────────────────────────────────────────────────
+*.db
+*.sqlite3
+
+# ── Node / Frontend ───────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+
+# ── Docker ────────────────────────────────────────────────────────────
+# (compose files intentionally committed)
+
+# ── IDEs ──────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Testing / Coverage ────────────────────────────────────────────────
+.coverage
+htmlcov/
+.pytest_cache/
+coverage.json
+
+# ── ML model weights (large binary files — use Git LFS or S3) ────────
+*.h5
+*.keras
+*.pkl
+*.joblib
+*.pt
+*.pth
+ml/weights/
+ml/checkpoints/
+
+# ── Logs ──────────────────────────────────────────────────────────────
+*.log
+logs/
