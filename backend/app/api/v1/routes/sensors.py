@@ -6,11 +6,12 @@ from datetime import datetime
 from typing import Optional
 
 from app.database import get_db
-from app.models.dam import Sensor, SensorReading, ReadingQuality
+from app.models.sensor import Sensor, SensorReading
+from app.models.dam import ReadingQuality
 from app.core.rbac import require_water_access
-from app.models.user import User
+from app.models.user import Utilisateur as User
 from app.services.dam_service import update_dam_level
-from app.models.dam import Dam
+from app.models.dam import Barrage as Dam
 
 router = APIRouter()
 

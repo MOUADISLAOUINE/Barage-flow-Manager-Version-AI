@@ -1,86 +1,51 @@
-import enum
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, DateTime, Enum, ForeignKey, Text, JSON
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, BigInteger, DateTime, ForeignKey, Text, Float
+from sqlalchemy.orm import relationship, synonym
 from app.database import Base
-
+import enum
 
 class OrderStatus(str, enum.Enum):
-    PENDING = "PENDING"
-    APPROVED = "APPROVED"
-    REJECTED = "REJECTED"
-    BLOCKED = "BLOCKED"       # Safety lock engaged
-    COMPLETED = "COMPLETED"
-    OVERRIDE_APPROVED = "OVERRIDE_APPROVED"  # Director MFA override
+    PENDING = "EN_ATTENTE"
+    APPROVED = "APPROUVE"
+    REJECTED = "REJETE"
+    BLOCKED = "BLOQUE"
+    COMPLETED = "COMPLETE"
+    OVERRIDE_APPROVED = "OVERRIDE_APPROVED"
 
 
-class ReleaseOrder(Base):
-    __tablename__ = "release_orders"
 
-    id = Column(Integer, primary_key=True, index=True)
-    requested_by_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    approved_by_id = Column(Integer, ForeignKey("users.id"), nullable=True)
-    cooperative_id = Column(Integer, ForeignKey("cooperatives.id"), nullable=True)
-    dam_id = Column(Integer, ForeignKey("dams.id"), nullable=False)
-
-    volume_m3 = Column(Float, nullable=False)
-    status = Column(Enum(OrderStatus), default=OrderStatus.PENDING, index=True)
-
-    # Override fields (Director MFA override)
+class OrdreLiberation(Base):
+    __tablename__ = "ordre_liberation"
+    id_ordre = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id = synonym("id_ordre")
+    id_demandeur = Column(Integer, ForeignKey("utilisateur.id_utilisateur"), nullable=True)
+    requested_by_id = synonym("id_demandeur")
+    id_approbateur = Column(Integer, ForeignKey("utilisateur.id_utilisateur"), nullable=True)
+    approved_by_id = synonym("id_approbateur")
+    id_cooperative = Column(Integer, ForeignKey("cooperative.id_cooperative"), nullable=True)
+    cooperative_id = synonym("id_cooperative")
+    
+    dam_id = Column(Integer, ForeignKey("barrage.id_barrage"), nullable=True)
+    
+    volume_m3 = Column(BigInteger, nullable=False)
+    timestamp_demande = Column(DateTime, nullable=False)
+    requested_at = synonym("timestamp_demande")
+    timestamp_decision = Column(DateTime, nullable=True)
+    decided_at = synonym("timestamp_decision")
+    statut = Column(String(50), nullable=False) # 'EN_ATTENTE | APPROUVE | REJETE | BLOQUE | COMPLETE'
+    status = synonym("statut")
+    notes_approbation = Column(Text, nullable=True)
+    notes = synonym("notes_approbation")
+    raison_blocage = Column(Text, nullable=True)
+    
+    # Missing fields for English backend compatibility
     is_override = Column(String(5), default="false")
     override_justification = Column(Text, nullable=True)
     override_mfa_verified = Column(String(5), default="false")
-
-    # AI recommendation attached to this order
     ai_recommendation = Column(Text, nullable=True)
-
-    requested_at = Column(DateTime, default=datetime.utcnow)
-    decided_at = Column(DateTime, nullable=True)
     scheduled_release_at = Column(DateTime, nullable=True)
-    notes = Column(Text, nullable=True)
 
+    demandeur = relationship("Utilisateur", foreign_keys=[id_demandeur], back_populates="ordres_demandes")
+    approbateur = relationship("Utilisateur", foreign_keys=[id_approbateur], back_populates="ordres_approuves")
+    cooperative = relationship("Cooperative", back_populates="ordres_liberation")
 
-# ------------------------------------------------------------------
-# AuditLog — APPEND ONLY, NEVER UPDATE OR DELETE
-# ------------------------------------------------------------------
-class AuditLog(Base):
-    __tablename__ = "audit_logs"
-
-    id = Column(Integer, primary_key=True, index=True)
-    # Who
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
-    user_name = Column(String(200), nullable=False)   # Denormalised for immutability
-    user_role = Column(String(50), nullable=False)
-
-    # What
-    action = Column(String(100), nullable=False, index=True)
-    resource_type = Column(String(100), nullable=False)  # e.g. "ReleaseOrder"
-    resource_id = Column(Integer, nullable=True)
-
-    # Before / After snapshot
-    data_before = Column(JSON, nullable=True)
-    data_after = Column(JSON, nullable=True)
-    extra_notes = Column(Text, nullable=True)
-
-    # When / Where
-    timestamp = Column(DateTime, default=datetime.utcnow, index=True, nullable=False)
-    ip_address = Column(String(50), nullable=True)
-    session_id = Column(String(100), nullable=True)
-
-    # AuditLog is append-only — no update or delete operations exist for this model.
-
-
-# ------------------------------------------------------------------
-# ForecastResult
-# ------------------------------------------------------------------
-class ForecastResult(Base):
-    __tablename__ = "forecast_results"
-
-    id = Column(Integer, primary_key=True, index=True)
-    dam_id = Column(Integer, ForeignKey("dams.id"), nullable=False)
-    generated_at = Column(DateTime, default=datetime.utcnow, index=True)
-    model_version = Column(String(50), nullable=False)
-    # 180-day forecast as JSON list of {date, predicted_pct, lower_bound, upper_bound}
-    forecast_data = Column(JSON, nullable=False)
-    mae_score = Column(Float, nullable=True)   # Mean Absolute Error vs actuals
-    notes = Column(Text, nullable=True)
+ReleaseOrder = OrdreLiberation

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.cooperative import Cooperative
 from app.core.rbac import require_water_access
-from app.models.user import User
+from app.models.user import Utilisateur as User
 
 router = APIRouter()
 

@@ -10,9 +10,10 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from app.config import settings
-from app.models.dam import Dam, WaterZone
-from app.models.release_order import AuditLog, OrderStatus, ReleaseOrder
-from app.models.user import User
+from app.models.dam import Barrage as Dam, WaterZone
+from app.models.audit_log import AuditLog
+from app.models.release_order import OrderStatus, ReleaseOrder
+from app.models.user import Utilisateur as User
 from app.services.audit_service import write_audit_log
 
 

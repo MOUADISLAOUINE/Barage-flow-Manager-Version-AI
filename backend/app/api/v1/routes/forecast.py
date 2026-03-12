@@ -2,9 +2,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models.release_order import ForecastResult
+from app.models.forecast import ForecastResult
 from app.core.rbac import require_water_access
-from app.models.user import User
+from app.models.user import Utilisateur as User
 
 router = APIRouter()
 

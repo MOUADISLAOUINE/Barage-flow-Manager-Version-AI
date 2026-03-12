@@ -10,8 +10,8 @@ from typing import Any, Optional
 
 from sqlalchemy.orm import Session
 
-from app.models.release_order import AuditLog
-from app.models.user import User
+from app.models.audit_log import AuditLog
+from app.models.user import Utilisateur as User
 
 
 def write_audit_log(

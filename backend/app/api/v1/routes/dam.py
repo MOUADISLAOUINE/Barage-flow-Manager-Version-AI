@@ -7,9 +7,9 @@ from pydantic import BaseModel
 from datetime import datetime
 
 from app.database import get_db
-from app.models.dam import Dam
+from app.models.dam import Barrage as Dam
 from app.core.rbac import require_water_access
-from app.models.user import User
+from app.models.user import Utilisateur as User
 
 router = APIRouter()
 
@@ -51,7 +51,7 @@ async def update_safety_threshold(
     """Director only — update the configurable safety reserve threshold."""
     from app.core.rbac import require_director
     from app.services.audit_service import write_audit_log
-    from app.models.user import UserRole
+    from app.models.user import Utilisateur as UserRole
 
     if current_user.role != UserRole.DIRECTOR:
         raise HTTPException(status_code=403, detail="Only the Director can change safety thresholds.")

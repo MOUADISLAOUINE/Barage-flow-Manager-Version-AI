@@ -10,7 +10,7 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 
 from app.database import get_db
-from app.models.user import User, UserRole, UserStatus
+from app.models.user import Utilisateur as User, UserRole, UserStatus
 from app.core.rbac import require_admin
 from app.core.security import hash_password
 

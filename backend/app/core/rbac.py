@@ -9,7 +9,7 @@ Usage in a route:
 """
 from fastapi import Depends, HTTPException, status
 from app.core.auth import get_current_active_user
-from app.models.user import User, UserRole
+from app.models.user import Utilisateur as User, UserRole
 
 
 # ------------------------------------------------------------------

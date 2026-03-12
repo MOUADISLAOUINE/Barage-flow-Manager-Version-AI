@@ -13,12 +13,12 @@ from typing import Optional, List
 
 from app.database import get_db
 from app.models.release_order import ReleaseOrder, OrderStatus
-from app.models.user import User, UserRole
+from app.models.user import Utilisateur as User, UserRole
 from app.core.rbac import require_can_submit_order, require_can_approve_order, require_director
 from app.core.security import verify_mfa_token
 from app.services.dam_service import can_submit_release_order
 from app.services.audit_service import write_audit_log
-from app.models.dam import Dam
+from app.models.dam import Barrage as Dam
 
 router = APIRouter()
 
