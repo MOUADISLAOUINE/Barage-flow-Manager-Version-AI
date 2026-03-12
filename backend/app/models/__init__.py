@@ -6,6 +6,8 @@ from app.models.sensor import Capteur, LectureCapteur, Sensor, SensorReading
 from app.models.contract import Contrat, Contract
 from app.models.forecast import ResultatPrevision, ForecastResult
 from app.models.audit_log import JournalAudit, AuditLog
+from app.models.forecast import ResultatPrevision           # ← AJOUTER
+from app.models.forecast import ResultatPrevision, ForecastResult
 
 __all__ = [
     "Barrage",
