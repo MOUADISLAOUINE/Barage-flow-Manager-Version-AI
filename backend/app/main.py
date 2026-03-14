@@ -1,31 +1,22 @@
+"""
+Barrage-Flow Manager — FastAPI application entry point.
+"""
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
 
 from app.config import settings
-from app.database import engine, Base
-from app.api.v1.router import api_router
 
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup
-    print("🚀 Barrage-Flow Manager API starting up...")
-    yield
-    # Shutdown
-    print("💤 Barrage-Flow Manager API shutting down...")
-
-
+# ── App instance ────────────────────────────────────────────────────
 app = FastAPI(
-    title="Barrage-Flow Manager API",
-    description="Smart dam management system for Youssef Ibn Tachfine Dam, Tiznit — Morocco.",
+    title=settings.APP_NAME,
     version="1.0.0",
-    lifespan=lifespan,
+    description="Smart dam management system for Youssef Ibn Tachfine Dam, Tiznit — Morocco.",
     docs_url="/docs",
     redoc_url="/redoc",
 )
 
-# CORS
+# ── CORS ────────────────────────────────────────────────────────────
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
@@ -34,10 +25,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Routers
-app.include_router(api_router, prefix="/api/v1")
+
+# ── Health check (used by Docker & CI) ──────────────────────────────
+@app.get("/health", tags=["system"])
+def health_check():
+    return {"status": "ok"}
 
 
-@app.get("/health", tags=["Health"])
-async def health_check():
-    return {"status": "ok", "service": "barrage-flow-manager"}
+# ── API Router ──────────────────────────────────────────────────────
+# TODO: Uncomment once api router is built:
+# from app.api.v1.router import api_router
+# app.include_router(api_router, prefix="/api/v1")

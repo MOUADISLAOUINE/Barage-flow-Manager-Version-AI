@@ -1,29 +1,35 @@
+"""
+Database engine, session factory, and declarative Base.
+Every module imports Base and get_db from here.
+"""
+
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker
+
 from app.config import settings
 
-# SQLite needs different engine args vs PostgreSQL
-if settings.DATABASE_URL.startswith("sqlite"):
-    engine = create_engine(
-        settings.DATABASE_URL,
-        connect_args={"check_same_thread": False},
-    )
-else:
-    engine = create_engine(
-        settings.DATABASE_URL,
-        pool_pre_ping=True,
-        pool_size=10,
-        max_overflow=20,
-    )
+# ── Engine ──────────────────────────────────────────────────────────
+engine = create_engine(
+    settings.DATABASE_URL,
+    pool_pre_ping=True,       # reconnect stale connections
+    pool_size=10,
+    max_overflow=20,
+)
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# ── Session factory ─────────────────────────────────────────────────
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine,
+)
 
+# ── Declarative Base ────────────────────────────────────────────────
 Base = declarative_base()
 
 
+# ── Dependency for FastAPI routes ───────────────────────────────────
 def get_db():
-    """FastAPI dependency — yields a DB session, always closes it."""
+    """Yield a DB session per request, auto-close on exit."""
     db = SessionLocal()
     try:
         yield db
