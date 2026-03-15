@@ -16,17 +16,14 @@ import NotFoundPage from './pages/NotFoundPage'
 
 // Layout
 import AppLayout from './components/common/AppLayout'
+import ProtectedRoute from './components/common/ProtectedRoute'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
 })
 
-function ProtectedRoute({ children, roles }) {
-  const { isAuthenticated, role } = useAuthStore()
-  if (!isAuthenticated()) return <Navigate to="/login" replace />
-  if (roles && !roles.includes(role)) return <Navigate to="/dashboard" replace />
-  return children
-}
+// New Mfa Page
+import MfaPage from './pages/MfaPage'
 
 export default function App() {
   return (
@@ -35,6 +32,11 @@ export default function App() {
         <Toaster position="top-right" />
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/mfa" element={
+            <ProtectedRoute roles={['DIRECTOR']}>
+              <MfaPage />
+            </ProtectedRoute>
+          } />
 
           <Route path="/" element={
             <ProtectedRoute>

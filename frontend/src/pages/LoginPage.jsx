@@ -6,12 +6,9 @@ import useAuthStore from '../store/authStore'
 
 export default function LoginPage() {
   const navigate = useNavigate()
-  const { setAuth, setMfaPending } = useAuthStore()
+  const { setAuth } = useAuthStore()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [mfaCode, setMfaCode] = useState('')
-  const [mfaStep, setMfaStep] = useState(false)
-  const [tempToken, setTempToken] = useState(null)
   const [loading, setLoading] = useState(false)
 
   const handleLogin = async (e) => {
@@ -19,30 +16,26 @@ export default function LoginPage() {
     setLoading(true)
     try {
       const { data } = await authApi.login(email, password)
-      if (data.mfa_required) {
-        setTempToken(data.access_token)
-        setMfaStep(true)
-        toast('MFA code required', { icon: '🔐' })
+      
+      // The backend returns { access_token, refresh_token, token_type }
+      // The role is decoded from the JWT payload
+      const tokenPayload = JSON.parse(atob(data.access_token.split('.')[1]))
+      const userRole = tokenPayload.role
+      
+      setAuth({ token: data.access_token, role: userRole })
+      
+      if (userRole.toUpperCase() === 'DIRECTOR') {
+        navigate('/mfa')
       } else {
-        setAuth({ token: data.access_token, role: data.role })
         navigate('/dashboard')
       }
-    } catch {
-      toast.error('Invalid email or password.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleMfa = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    try {
-      const { data } = await authApi.verifyMfa(tempToken, mfaCode)
-      setAuth({ token: data.access_token, role: data.role })
-      navigate('/dashboard')
-    } catch {
-      toast.error('Invalid MFA code.')
+      
+    } catch (error) {
+      if (error.response?.status === 403) {
+        toast.error('Account suspended. Contact Administrator.')
+      } else {
+        toast.error('Invalid email or password.')
+      }
     } finally {
       setLoading(false)
     }
@@ -57,53 +50,30 @@ export default function LoginPage() {
           <p className="text-sm text-gray-500 mt-1">Youssef Ibn Tachfine Dam · Tiznit</p>
         </div>
 
-        {!mfaStep ? (
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input
-                type="email" required value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input
-                type="password" required value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <button
-              type="submit" disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition disabled:opacity-50"
-            >
-              {loading ? 'Signing in…' : 'Sign in'}
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleMfa} className="space-y-4">
-            <p className="text-sm text-gray-600 text-center">
-              Enter the 6-digit code from your authenticator app.
-            </p>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">MFA Code</label>
-              <input
-                type="text" required value={mfaCode} maxLength={6} pattern="\d{6}"
-                onChange={(e) => setMfaCode(e.target.value)}
-                className="w-full text-center text-2xl tracking-widest rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="000000"
-              />
-            </div>
-            <button
-              type="submit" disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition disabled:opacity-50"
-            >
-              {loading ? 'Verifying…' : 'Verify'}
-            </button>
-          </form>
-        )}
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+              type="email" required value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input
+              type="password" required value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <button
+            type="submit" disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition disabled:opacity-50"
+          >
+            {loading ? 'Signing in…' : 'Sign in'}
+          </button>
+        </form>
       </div>
     </div>
   )

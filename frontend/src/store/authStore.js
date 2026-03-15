@@ -11,14 +11,18 @@ const useAuthStore = create(
       user: null,
       token: null,
       role: null,
-      mfaPending: false,
-      tempToken: null,
+      mfaVerified: false,
 
-      setAuth: ({ token, role }) => set({ token, role, mfaPending: false, tempToken: null }),
+      // Normalize role to uppercase to avoid casing bugs during comparisons
+      setAuth: ({ token, role }) => set({ 
+        token, 
+        role: role.toUpperCase(), 
+        mfaVerified: role.toUpperCase() !== 'DIRECTOR' 
+      }),
 
-      setMfaPending: ({ tempToken, role }) => set({ mfaPending: true, tempToken, role }),
+      setMfaVerified: (status) => set({ mfaVerified: status }),
 
-      logout: () => set({ user: null, token: null, role: null, mfaPending: false, tempToken: null }),
+      logout: () => set({ user: null, token: null, role: null, mfaVerified: false }),
 
       isAuthenticated: () => !!get().token,
 

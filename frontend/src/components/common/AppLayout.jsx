@@ -9,7 +9,7 @@ const navItems = [
   { to: '/forecast',       label: 'Forecast',        icon: '🔮', roles: ['DIRECTOR','OPERATOR','AGRICULTURAL_OFFICER'] },
   { to: '/cooperatives',   label: 'Cooperatives',    icon: '🌾', roles: ['DIRECTOR','OPERATOR','AGRICULTURAL_OFFICER'] },
   { to: '/orders',         label: 'Release Orders',  icon: '💧', roles: ['DIRECTOR','OPERATOR'] },
-  { to: '/audit',          label: 'Audit Log',       icon: '📋', roles: ['DIRECTOR','ADMIN'] },
+  { to: '/audit',          label: 'Audit Log',       icon: '📋', roles: ['DIRECTOR'] },
   { to: '/admin',          label: 'Admin',           icon: '⚙️',  roles: ['ADMIN'] },
 ]
 

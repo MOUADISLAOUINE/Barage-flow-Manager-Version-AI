@@ -16,6 +16,9 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+
 # ── CORS ────────────────────────────────────────────────────────────
 app.add_middleware(
     CORSMiddleware,
@@ -33,6 +36,5 @@ def health_check():
 
 
 # ── API Router ──────────────────────────────────────────────────────
-# TODO: Uncomment once api router is built:
-# from app.api.v1.router import api_router
-# app.include_router(api_router, prefix="/api/v1")
+from app.api.v1.router import router as api_router
+app.include_router(api_router, prefix="/api/v1")

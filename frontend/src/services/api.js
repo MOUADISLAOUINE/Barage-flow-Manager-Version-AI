@@ -35,9 +35,9 @@ export default api
 // ── Auth ────────────────────────────────────────────────────────────
 export const authApi = {
   login: (email, password) =>
-    api.post('/auth/login', new URLSearchParams({ username: email, password })),
-  verifyMfa: (tempToken, mfaCode) =>
-    api.post('/auth/verify-mfa', { temp_token: tempToken, mfa_code: mfaCode }),
+    api.post('/auth/login', { email, password }),
+  verifyMfa: (mfaCode) =>
+    api.post('/auth/mfa/verify', { totp_code: mfaCode }),
   logout: () => api.post('/auth/logout'),
 }
 
@@ -78,10 +78,11 @@ export const forecastApi = {
   getLatest: (damId = 1) => api.get(`/forecast/latest?dam_id=${damId}`),
 }
 
-// ── Admin ────────────────────────────────────────────────────────────
+// ── Admin (User Management) ───────────────────────────────────────────
 export const adminApi = {
-  listUsers: () => api.get('/admin/users'),
-  createUser: (data) => api.post('/admin/users', data),
-  updateUserStatus: (id, status) => api.patch(`/admin/users/${id}/status`, { status }),
+  listUsers: () => api.get('/users/'),
+  createUser: (data) => api.post('/users/', data),
+  updateUser: (id, data) => api.patch(`/users/${id}`, data),
+  deleteUser: (id) => api.delete(`/users/${id}`),
   health: () => api.get('/admin/health'),
 }

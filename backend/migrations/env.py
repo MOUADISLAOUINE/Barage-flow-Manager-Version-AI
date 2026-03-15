@@ -22,11 +22,12 @@ from app.database import Base            # noqa: E402
 # from app.models.dam import Dam                        # noqa: E402, F401
 # from app.models.sensor import Sensor                  # noqa: E402, F401
 # from app.models.cooperative import Cooperative        # noqa: E402, F401
-# from app.models.user import User                      # noqa: E402, F401
+from app.models.user import User                        # noqa: E402, F401
+from app.models.session import Session, MFAToken        # noqa: E402, F401
 # from app.models.release_order import ReleaseOrder     # noqa: E402, F401
 # from app.models.contract import Contract              # noqa: E402, F401
 # from app.models.forecast import Forecast              # noqa: E402, F401
-# from app.models.audit_log import AuditLog             # noqa: E402, F401
+from app.models.audit_log import AuditLog               # noqa: E402, F401
 
 # ── Alembic Config ──────────────────────────────────────────────────
 config = context.config
