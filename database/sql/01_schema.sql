@@ -92,7 +92,8 @@ CREATE TABLE Lacher_Eau (
     id_barrage INT NOT NULL,
 
     CONSTRAINT fk_lacher_demande 
-        FOREIGN KEY (id_demande) REFERENCES Demande_Irrigation(id_demande),
+        FOREIGN KEY (id_demande) REFERENCES Demande_Irrigation(id_demande)
+            ON DELETE SET NULL,
     CONSTRAINT fk_lacher_user 
         FOREIGN KEY (id_user) REFERENCES Utilisateur(id_user),
     CONSTRAINT fk_lacher_barrage 
