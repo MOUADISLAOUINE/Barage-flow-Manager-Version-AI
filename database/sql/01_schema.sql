@@ -5,11 +5,11 @@
 
 -- 1. CREATE DATABASE
 -- =====================================================
-CREATE DATABASE IF NOT EXISTS barrage_flow_manager_ai_version 
+CREATE DATABASE IF NOT EXISTS barrage_flow_db 
     CHARACTER SET utf8mb4 
     COLLATE utf8mb4_unicode_ci;
 
-USE barrage_flow_manager_ai_version;
+USE barrage_flow_db;
 
 -- =====================================================
 -- 2. TABLE BARRAGE
