@@ -52,7 +52,7 @@ CREATE TABLE Cooperative (
     id_coop INT PRIMARY KEY AUTO_INCREMENT,
     nom VARCHAR(50) NOT NULL,
     surface_agricole DECIMAL(15,2) NOT NULL,
-    historique_consommation DECIMAL(15,2),
+    historique_consommation DECIMAL(15,2) NOT NULL DEFAULT 0 CHECK (historique_consommation >= 0),
 
     INDEX idx_coop_nom (nom)
 ) ENGINE=InnoDB;
