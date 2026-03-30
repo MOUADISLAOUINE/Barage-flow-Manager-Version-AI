@@ -20,6 +20,14 @@ CREATE TABLE Barrage (
     capacite_max DECIMAL(15,2) NOT NULL,
     niveau_actuel DECIMAL(15,2) NOT NULL,
     seuil_critique DECIMAL(15,2) NOT NULL,
+    CONSTRAINT chk_barrage_niveaux
+        CHECK (
+            capacite_max >= 0
+            AND niveau_actuel >= 0
+            AND seuil_critique >= 0
+            AND niveau_actuel <= capacite_max
+            AND seuil_critique <= capacite_max
+        ),
 
     INDEX idx_barrage_nom (nom),
     INDEX idx_barrage_niveau (niveau_actuel)
