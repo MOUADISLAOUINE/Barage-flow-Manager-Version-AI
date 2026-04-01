@@ -64,5 +64,24 @@ VALUES
 INSERT INTO Alerte (type, message, date_, id_barrage) 
 VALUES 
 ('niveau_critique', 'Niveau d''eau critique atteint - Seuil de securite approchant', '2024-03-20 03:45:00', 1),
-('seuil_bas', 'Niveau d\'eau bas - Reduction recommandee des lachers planifies', '2024-03-18 08:00:00', 1),
+('seuil_bas', 'Niveau d''eau bas - Reduction recommandee des lachers planifies', '2024-03-18 08:00:00', 1),
 ('systeme', 'Maintenance programmee des vannes le 25/03/2024', '2024-03-15 10:00:00', 1);
+
+-- =====================================================
+-- 7. INSERT REPARTITION (NOUVEAU)
+-- =====================================================
+-- Répartition des volumes des lâchers d'eau entre les coopératives
+-- Lâcher 1 (50000 m³) -> Réparti entre 2 coopératives
+INSERT INTO Repartition (id_lacher, id_coop, volume_attribue) 
+VALUES 
+(1, 1, 35000.00),  -- Coop Tamaloute reçoit 35,000 m³
+(1, 3, 15000.00);  -- Coop Oued Souss reçoit 15,000 m³
+
+-- Lâcher 2 (75000 m³) -> Réparti entre 3 coopératives
+INSERT INTO Repartition (id_lacher, id_coop, volume_attribue) 
+VALUES 
+(2, 2, 40000.00),  -- Coop El Firdaous reçoit 40,000 m³
+(2, 4, 20000.00),  -- Coop Al Amal reçoit 20,000 m³
+(2, 5, 15000.00);  -- Coop Targa n Touchka reçoit 15,000 m³
+
+-- Lâcher 3 (en attente) -> Pas de répartition encore (statut = planifie)
