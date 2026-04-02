@@ -14,3 +14,4 @@ class Cooperative(Base):
     
     # Relationships
     demandes_irrigation = relationship("DemandeIrrigation", back_populates="cooperative")
+    repartitions = relationship("Repartition", back_populates="cooperative", cascade="all, delete-orphan")

@@ -1,5 +1,6 @@
 # backend/app/main.py
 from app.routes import auth, users, dashboard, alerts
+from app.routes import repartition
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,6 +28,7 @@ app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(dashboard.router)
 app.include_router(alerts.router)
+app.include_router(repartition.router)
 
 @app.get("/")
 def root():
