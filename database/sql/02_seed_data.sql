@@ -84,4 +84,4 @@ VALUES
 (2, 4, 20000.00),  -- Coop Al Amal reçoit 20,000 m³
 (2, 5, 15000.00);  -- Coop Targa n Touchka reçoit 15,000 m³
 
--- Lâcher 3 (en attente) -> Pas de répartition encore (statut = planifie)
+-- Lâcher 3 (en attente) -> Pas de répartition encore (statut = planifie)s$

@@ -1,14 +1,14 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
-import { 
-  User, 
-  Mail, 
-  ShieldCheck, 
-  Calendar, 
-  Settings, 
-  Lock, 
-  Bell, 
-  LogOut 
+import {
+  User,
+  Mail,
+  ShieldCheck,
+  Calendar,
+  Settings,
+  Lock,
+  Bell,
+  LogOut
 } from "lucide-react";
 
 export default function ProfilePage() {
@@ -89,7 +89,7 @@ export default function ProfilePage() {
             <h3 className="text-lg font-semibold text-danger">Zone de danger</h3>
             <p className="text-sm text-text-muted">Actions irréversibles sur votre compte</p>
           </div>
-          <button 
+          <button
             onClick={logout}
             className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-danger/10 border border-danger/20 text-danger hover:bg-danger hover:text-white transition-all font-semibold"
           >
